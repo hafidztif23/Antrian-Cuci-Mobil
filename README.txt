@@ -1,0 +1,1 @@
+Ini ditulis didalam vscode by Firly
