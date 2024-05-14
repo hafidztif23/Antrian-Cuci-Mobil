@@ -20,15 +20,7 @@ int main(){
 	time_t modifiedTime = mktime(gmTime);
 	// Konversi detik menjadi sebuah date utuh
 	char *modifiedDate = ctime(&modifiedTime);
-	
-	printf("%s\n", modifiedDate);
-	
-	
-	
-	
-	
-	
-	
+	printf("%s\n", modifiedDate)
 	
 	// Create list
 	createStation();
@@ -41,9 +33,11 @@ int main(){
 			// Tambah Antrian
 			tambahAntrian();
 			break;
-//
-//		case 2:
-//			// Tampilkan Antrian saat ini
+
+		case '2':
+			// Tampilkan Antrian saat ini
+			lompatWaktu(modifiedDate, gmTime);
+			break;
 //			
 //		case 3:
 //			// Fast forward time

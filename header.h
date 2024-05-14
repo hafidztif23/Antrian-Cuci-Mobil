@@ -7,26 +7,20 @@ char *date;
 typedef struct Car {
 	char plate[10];
 	char type;
-	int processTime;
+	int washingTime;
+	int dryingTime;
 	struct Car *next;
 }Car;
 
-typedef struct WashingStation {
-	int id;
+typedef struct Station {
 	Car *processing;
-}WashingStation;
-
-typedef struct DryingStation {
-	int id;
-	Car *processing;
-}DryingStation;
-
+}Station;
 typedef struct WaitingList {
 	Car *queue;
 }WaitingList;
 
-WashingStation washingStations[MAX_STATION];
-DryingStation dryingStations[MAX_STATION];
+Station washingStations[MAX_STATION];
+Station dryingStations[MAX_STATION];
 
 extern struct WaitingList *WL;
 
@@ -39,5 +33,10 @@ void tampilkanJenisMobil();
 // Prosedur untuk menambah mobil kedalam list.
 void tambahAntrian();
 
+// Prosedur untuk inisialisasi awal program
+void initialization(char *modifiedDate);
+
+// Prosedur untuk lompat waktu
+void lompatWaktu(char *modifiedDate, struct tm *gmTime);
 
 #endif

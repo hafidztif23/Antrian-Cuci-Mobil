@@ -11,12 +11,10 @@ struct WaitingList *WL = NULL;
 
 void createStation() {
 	for (int i = 0; i < MAX_STATION; i++){
-		washingStations[i].id = i + 1;
 		washingStations[i].processing = NULL;
 	}
 	
 	for (int i = 0; i < MAX_STATION; i++){
-		dryingStations[i].id = i + 1;
 		dryingStations[i].processing = NULL;
 	}
 }
@@ -58,31 +56,43 @@ void tambahAntrian() {
 		if (input == 'a' || input == 'A'){
 			// Memilih tipe A
 			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
-			lower = 48;
-			upper = 53;
+			lower = 34;
+			upper = 37;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
-			car->processTime = number;
+			car->washingTime = number;
+			lower = 13;
+			upper = 17;
+			number = (rand() % (upper - lower + 1) + lower);
+			car->dryingTime = number;
 			car->type = 'A';
 			valid = true;
 		} else if (input == 'b' || input == 'B'){
 			// Memilih tipe B
 			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
-			lower = 58;
-			upper = 63;
+			lower = 43;
+			upper = 47;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
-			car->processTime = number;
+			car->washingTime = number;
+			lower = 13;
+			upper = 17;
+			number = (rand() % (upper - lower + 1) + lower);
+			car->dryingTime = number;
 			car->type = 'B';
 			valid = true;
 		} else if (input == 'c' || input == 'C' ){
 			// Memilih tipe C
 			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
-			lower = 78;
-			upper = 83;
+			lower = 63;
+			upper = 67;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
-			car->processTime = number;
+			car->washingTime = number;
+			lower = 13;
+			upper = 17;
+			number = (rand() % (upper - lower + 1) + lower);
+			car->dryingTime = number;
 			car->type = 'C';
 			valid = true;
 		} else {
@@ -121,11 +131,12 @@ void tambahAntrian() {
 	strcpy(car->plate, plate);
 	car->next = NULL;
 	
-	// Lakukan proses konfirmasi pembayaran disini sebelum menambahkan ke stasiun atau waiting list
-	// konfirmasiPembayaran {
 	
-	
-//	   }
+//	Lakukan proses konfirmasi pembayaran disini sebelum menambahkan ke stasiun atau waiting list
+//	konfirmasiPembayaran() {
+//	
+//	
+//	}
 
 	
 	if (washingStations[0].processing == NULL){
@@ -151,8 +162,61 @@ void tambahAntrian() {
 	}
 }
 
-void lompatWaktu {
+void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
+	system("cls");
+	int inputHour, inputMinute, minute, remainingMinute;
+	bool valid;
+	struct Car *current = NULL;
+	printf("Waktu sekarang: %s\n\n", modifiedDate);
+	printf("Masukkan berapa jam untuk di lompati: ");
+	fflush(stdin);
+	scanf("%d", &inputHour);
+	printf("Masukkan berapa menit untuk di lompati: ");
+	fflush(stdin);
+	scanf("%d", &inputMinute);
+	gmTime->tm_hour = gmTime->tm_hour + inputHour;
+	gmTime->tm_min = gmTime->tm_min + inputMinute;
+	time_t modifiedTime = mktime(gmTime);
+	modifiedDate = ctime(&modifiedTime);
+	printf("Waktu menjadi: %s\n", modifiedDate);
 	
+	minute = (inputHour * 60) + inputMinute;
+	
+	for (int i = 0; i < MAX_STATION; i++) {
+		valid = true;
+		minute = (inputHour * 60) + inputMinute;
+		if (washingStations[i].processing != NULL) {
+			// Jika pengerjaan mobil selesai
+			if (washingStations[i].processing->washingTime <= minute) {
+				minute -= washingStations[i].processing->washingTime;
+				remainingMinute = remainingMinute + minute;
+				washingStations[i].processing = NULL;
+			} else {
+				washingStations[i].processing->washingTime = washingStations[i].processing->washingTime - minute;
+				minute = 0;
+			}
+		}
+	}
+
+	
+	if (remainingMinute > 0) {
+        // Tambahkan sisa menit ke gmTime
+        gmTime->tm_min += remainingMinute;
+        time_t modifiedTime = mktime(gmTime);
+        modifiedDate = ctime(&modifiedTime);
+    }
+    
+    // Mengecek jika waiting list tidak kosong dan memasukkan node pertama pada waiting list kedalam stasiun kosong
+    if (WL->queue != NULL) {
+    	for (int i = 0; i < MAX_STATION; i++) {
+    		if (washingStations[i].processing == NULL) {
+    			washingStations[i].processing = WL->queue;
+    			WL->queue = WL->queue->next;
+			}
+		}
+	}
+    
+    printf("Waktu terakhir: %s\n", modifiedDate);
 }
 
 
