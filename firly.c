@@ -11,26 +11,31 @@ struct WaitingList *WL = NULL;
 
 void createStation() {
 	for (int i = 0; i < MAX_STATION; i++){
-		stations[i].id = i + 1;
-		stations[i].processing = NULL;
+		washingStations[i].id = i + 1;
+		washingStations[i].processing = NULL;
+	}
+	
+	for (int i = 0; i < MAX_STATION; i++){
+		dryingStations[i].id = i + 1;
+		dryingStations[i].processing = NULL;
 	}
 }
 
 void tampilkanJenisMobil() {
-	printf("Jenis Mobil A (Waktu Pencucian kurang lebih 30 Menit)\n");
+	printf("Jenis Mobil A (Waktu Pencucian kurang lebih 50 Menit)\n");
 	printf("- KIA Picanto\n");
 	printf("- Daihatsu Ceria\n");
 	printf("- Suzuki Karimun\n");
 	printf("- Toyota Yaris\n");
 	printf("  Dan Sejenisnya...\n");
 	
-	printf("\nJenis Mobil B (Waktu Pencucian kurang lebih 45 Menit)\n");
+	printf("\nJenis Mobil B (Waktu Pencucian kurang lebih 60 Menit)\n");
 	printf("- Toyota Avanza\n");
 	printf("- Honda Freed\n");
 	printf("- Suzuki Ertiga\n");
 	printf("  Dan Sejenisnya...\n");
 	
-	printf("\nJenis Mobil C (Waktu Pencucian kurang lebih 75 Menit)\n");
+	printf("\nJenis Mobil C (Waktu Pencucian kurang lebih 80 Menit)\n");
 	printf("- Metromini\n");
 	printf("- Truk\n");
 	printf("  Dan Sejenisnya...\n");
@@ -52,8 +57,9 @@ void tambahAntrian() {
 		input = getchar();
 		if (input == 'a' || input == 'A'){
 			// Memilih tipe A
-			lower = 27;
-			upper = 33;
+			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
+			lower = 48;
+			upper = 53;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
 			car->processTime = number;
@@ -61,8 +67,9 @@ void tambahAntrian() {
 			valid = true;
 		} else if (input == 'b' || input == 'B'){
 			// Memilih tipe B
-			lower = 42;
-			upper = 48;
+			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
+			lower = 58;
+			upper = 63;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
 			car->processTime = number;
@@ -70,8 +77,9 @@ void tambahAntrian() {
 			valid = true;
 		} else if (input == 'c' || input == 'C' ){
 			// Memilih tipe C
-			lower = 72;
-			upper = 78;
+			// Lakukan randomisasi sesuai estimasi pengerjaan mobil tipe tertentu untuk waktu pengerjaan
+			lower = 78;
+			upper = 83;
 			srand(time(NULL));
 			number = (rand() % (upper - lower + 1) + lower);
 			car->processTime = number;
@@ -113,11 +121,18 @@ void tambahAntrian() {
 	strcpy(car->plate, plate);
 	car->next = NULL;
 	
-	if (stations[0].processing == NULL){
-		stations[0].processing = car;
+	// Lakukan proses konfirmasi pembayaran disini sebelum menambahkan ke stasiun atau waiting list
+	// konfirmasiPembayaran {
+	
+	
+//	   }
+
+	
+	if (washingStations[0].processing == NULL){
+		washingStations[0].processing = car;
 		printf("Triggered 1\n");
-	} else if (stations[1].processing == NULL){
-		stations[1].processing = car;
+	} else if (washingStations[1].processing == NULL){
+		washingStations[1].processing = car;
 		printf("Triggered 2\n");
 	} else {
 		printf("Triggered 3\n");
@@ -133,8 +148,10 @@ void tambahAntrian() {
         	}
         	current->next = car;
 		}
-		
 	}
+}
+
+void lompatWaktu {
 	
 }
 

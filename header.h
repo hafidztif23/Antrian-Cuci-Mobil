@@ -11,16 +11,22 @@ typedef struct Car {
 	struct Car *next;
 }Car;
 
-typedef struct Station {
+typedef struct WashingStation {
 	int id;
 	Car *processing;
-}Station;
+}WashingStation;
+
+typedef struct DryingStation {
+	int id;
+	Car *processing;
+}DryingStation;
 
 typedef struct WaitingList {
 	Car *queue;
 }WaitingList;
 
-Station stations[MAX_STATION];
+WashingStation washingStations[MAX_STATION];
+DryingStation dryingStations[MAX_STATION];
 
 extern struct WaitingList *WL;
 
