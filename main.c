@@ -20,7 +20,7 @@ int main(){
 	time_t modifiedTime = mktime(gmTime);
 	// Konversi detik menjadi sebuah date utuh
 	char *modifiedDate = ctime(&modifiedTime);
-	printf("%s\n", modifiedDate)
+	printf("%s\n", modifiedDate);
 	
 	// Create list
 	createStation();

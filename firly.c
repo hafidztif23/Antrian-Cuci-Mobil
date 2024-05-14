@@ -162,51 +162,7 @@ void tambahAntrian() {
 	}
 }
 
-void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
-	system("cls");
-	int inputHour, inputMinute, minute, remainingMinute;
-	bool valid;
-	struct Car *current = NULL;
-	printf("Waktu sekarang: %s\n\n", modifiedDate);
-	printf("Masukkan berapa jam untuk di lompati: ");
-	fflush(stdin);
-	scanf("%d", &inputHour);
-	printf("Masukkan berapa menit untuk di lompati: ");
-	fflush(stdin);
-	scanf("%d", &inputMinute);
-	gmTime->tm_hour = gmTime->tm_hour + inputHour;
-	gmTime->tm_min = gmTime->tm_min + inputMinute;
-	time_t modifiedTime = mktime(gmTime);
-	modifiedDate = ctime(&modifiedTime);
-	printf("Waktu menjadi: %s\n", modifiedDate);
-	
-	minute = (inputHour * 60) + inputMinute;
-	
-	for (int i = 0; i < MAX_STATION; i++) {
-		valid = true;
-		minute = (inputHour * 60) + inputMinute;
-		if (washingStations[i].processing != NULL) {
-			// Jika pengerjaan mobil selesai
-			if (washingStations[i].processing->washingTime <= minute) {
-				minute -= washingStations[i].processing->washingTime;
-				remainingMinute = remainingMinute + minute;
-				washingStations[i].processing = NULL;
-			} else {
-				washingStations[i].processing->washingTime = washingStations[i].processing->washingTime - minute;
-				minute = 0;
-			}
-		}
-	}
-
-	
-	if (remainingMinute > 0) {
-        // Tambahkan sisa menit ke gmTime
-        gmTime->tm_min += remainingMinute;
-        time_t modifiedTime = mktime(gmTime);
-        modifiedDate = ctime(&modifiedTime);
-    }
-    
-    // Mengecek jika waiting list tidak kosong dan memasukkan node pertama pada waiting list kedalam stasiun kosong
+void insertFromWaitingList() {
     if (WL->queue != NULL) {
     	for (int i = 0; i < MAX_STATION; i++) {
     		if (washingStations[i].processing == NULL) {
@@ -215,9 +171,68 @@ void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
 			}
 		}
 	}
+}
+
+void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
+	int inputHour, inputMinute, minute, remainingMinute, totalMinute;
+	bool valid = true;
+	struct Car *current = NULL;
+	printf("Waktu sekarang: %s\n\n", modifiedDate);
+	printf("Masukkan berapa jam untuk di lompati: ");
+	fflush(stdin);
+	scanf("%d", &inputHour);
+	printf("Masukkan berapa menit untuk di lompati: ");
+	fflush(stdin);
+	scanf("%d", &inputMinute);
+	minute = (inputHour * 60) + inputMinute;
+	
+    remainingMinute = minute;
+
+    do {
+        int usedMinute = 0; // Menyimpan menit yang digunakan dalam iterasi ini
+        for (int i = 0; i < MAX_STATION; i++) {
+            if (washingStations[i].processing != NULL) {
+            	printf("washingStation[%d].processing tidak NULL\n", i);
+                if (washingStations[i].processing->washingTime <= remainingMinute) {
+                	printf("washingStation[%d].processing->washingTime = %d, remainingMinute = %d\n", i, washingStations[i].processing->washingTime, remainingMinute);
+                    int temp = washingStations[i].processing->washingTime;
+                    usedMinute = temp > usedMinute ? temp : usedMinute;
+                    washingStations[i].processing->washingTime = 0;
+                    washingStations[i].processing = NULL;
+                    insertFromWaitingList();
+                    if (WL->queue == NULL) {
+                    	printf("Waiting list kosong\n");
+					} else {
+						printf("Mengambil mobil dari waiting list\n");
+					}
+                    
+                } else {
+                	printf("washingStation[%d].processing->washingTime lebih besar dari remainingMinute\n");
+                    washingStations[i].processing->washingTime -= remainingMinute;
+                    usedMinute = remainingMinute;
+                    totalMinute += usedMinute;
+                }
+            } else {
+            	printf("Semua stasiun kosong\n");
+            	valid = false;
+            	break;
+			}
+        }
+        remainingMinute -= usedMinute;
+    } while (remainingMinute > 0 && valid == true);
+
+	printf("Total minute: %d\n", totalMinute);
+    gmTime->tm_min += minute;
+    time_t modifiedTime = mktime(gmTime);
+    modifiedDate = ctime(&modifiedTime);
+
+    
+    // Mengecek jika waiting list tidak kosong dan memasukkan node pertama pada waiting list kedalam stasiun kosong
+
     
     printf("Waktu terakhir: %s\n", modifiedDate);
 }
+
 
 
 
