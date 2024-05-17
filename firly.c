@@ -19,7 +19,7 @@ void createStation() {
 	}
 }
 
-void tampilkanJenisMobil() {
+void showCarType() {
 	printf("Jenis Mobil A (Waktu Pencucian kurang lebih 50 Menit)\n");
 	printf("- KIA Picanto\n");
 	printf("- Daihatsu Ceria\n");
@@ -39,7 +39,7 @@ void tampilkanJenisMobil() {
 	printf("  Dan Sejenisnya...\n");
 }
 
-void tambahAntrian(char *modifiedDate) {
+void addQueue(char *modifiedDate) {
 	
 	int i, j, number, lower, upper = 0;
 	char input, inputUp;
@@ -51,7 +51,7 @@ void tambahAntrian(char *modifiedDate) {
 		system("cls");
 		fflush(stdin);
 		printf("Silakan pilih jenis mobil anda: \n\n");
-		tampilkanJenisMobil();
+		showCarType();
 		printf("\n Pilihan (A, B, atau C): ");
 		input = getchar();
 		if (input == 'a' || input == 'A'){
@@ -263,7 +263,7 @@ void insertToDryer(int j, int drying, char* modifiedDate, struct tm *gmTime) {
 	}
 }
 
-void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
+void timeLeap(char *modifiedDate, struct tm *gmTime) {
 	int inputHour, inputMinute, minute, remainingMinute, totalMinute, exceedTime, totalProcessingTime, temp, temp1;
 	bool valid = true;
 	struct Car *current = NULL;

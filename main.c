@@ -33,26 +33,22 @@ int main(){
 		switch(input){
 		case '1':	
 			// Tambah Antrian
-			tambahAntrian(modifiedDate);
+			addQueue(modifiedDate);
 			break;
 
 		case '2':
 			// Tampilkan Antrian saat ini
-			lompatWaktu(modifiedDate, gmTime);
+			timeLeap(modifiedDate, gmTime);
 			break;
 //			
 //		case 3:
-//			// Fast forward time
 //			
 //		case 4:
 //			// Search mobil (Estimasi waktu dikerjakan, plat nomor, tipe mobil) 
 //
 //		case 5:
 //			// Cancel antrian
-	}
-	
-			
-		
+		}
 	} while (input != 0);
 	return 0;
 }

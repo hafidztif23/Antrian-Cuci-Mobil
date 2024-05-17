@@ -31,15 +31,21 @@ extern struct WaitingList *WL;
 void createStation();
 
 // Prosedur untuk menampilkan jenis mobil.
-void tampilkanJenisMobil();
+void showCarType();
 
 // Prosedur untuk menambah mobil kedalam list.
-void tambahAntrian();
+void addQueue(char *modifiedDate);
 
-// Prosedur untuk inisialisasi awal program
-void initialization(char *modifiedDate);
+// Prosedur untuk memasukkan mobil list pertama dalam waiting list kedalam stasiun kosong
+void insertFromWaitingList(char *modifiedDate);
+
+// Prosedur untuk menampilkan detail mobil yang telah selesai dicuci
+void isDoneAlert(int i, char *modifiedDate, struct tm *gmTime);
+
+// Prosedur untuk memasukkan mobil kedalam stasiun pengering setelah selesai dicuci di stasiun cuci basah
+void insertToDryer(int j, int drying, char* modifiedDate, struct tm *gmTime);
 
 // Prosedur untuk lompat waktu
-void lompatWaktu(char *modifiedDate, struct tm *gmTime);
+void timeLeap(char *modifiedDate, struct tm *gmTime);
 
 #endif
