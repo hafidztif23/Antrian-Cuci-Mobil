@@ -26,12 +26,14 @@ int main(){
 	createStation();
 	
 	do{
+		printf("1. Tambah Antrian.\n");
+		printf("2. Lompat Waktu\n");
 		fflush(stdin);
 		input = getchar();
 		switch(input){
 		case '1':	
 			// Tambah Antrian
-			tambahAntrian();
+			tambahAntrian(modifiedDate);
 			break;
 
 		case '2':

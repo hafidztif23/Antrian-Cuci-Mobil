@@ -9,6 +9,9 @@ typedef struct Car {
 	char type;
 	int washingTime;
 	int dryingTime;
+	int usedTime;
+	char *arrivalTime;
+	char *processedTime;
 	struct Car *next;
 }Car;
 

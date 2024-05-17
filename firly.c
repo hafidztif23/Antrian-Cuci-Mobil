@@ -39,11 +39,12 @@ void tampilkanJenisMobil() {
 	printf("  Dan Sejenisnya...\n");
 }
 
-void tambahAntrian() {
+void tambahAntrian(char *modifiedDate) {
 	
 	int i, j, number, lower, upper = 0;
 	char input, inputUp;
 	char plate[10];
+	char *time1;
 	bool valid = false;
 	Car *car = (Car *) malloc (sizeof(Car));
 	while(!valid){
@@ -66,6 +67,8 @@ void tambahAntrian() {
 			number = (rand() % (upper - lower + 1) + lower);
 			car->dryingTime = number;
 			car->type = 'A';
+			time1 = strdup(modifiedDate);
+			car->arrivalTime = time1;
 			valid = true;
 		} else if (input == 'b' || input == 'B'){
 			// Memilih tipe B
@@ -80,6 +83,8 @@ void tambahAntrian() {
 			number = (rand() % (upper - lower + 1) + lower);
 			car->dryingTime = number;
 			car->type = 'B';
+			time1 = strdup(modifiedDate);
+			car->arrivalTime = time1;
 			valid = true;
 		} else if (input == 'c' || input == 'C' ){
 			// Memilih tipe C
@@ -94,6 +99,8 @@ void tambahAntrian() {
 			number = (rand() % (upper - lower + 1) + lower);
 			car->dryingTime = number;
 			car->type = 'C';
+			time1 = strdup(modifiedDate);
+			car->arrivalTime = time1;
 			valid = true;
 		} else {
 			// Tidak valid
@@ -138,12 +145,42 @@ void tambahAntrian() {
 //	
 //	}
 
+
+
+// To fix
+
+//	for (int i = 0; i < MAX_STATION; i++) {
+//		if (washingStations[i].processing == NULL){
+//			washingStations[i].processing = car;
+//			washingStations[i].processing->processedTime = modifiedDate;
+//			printf("Triggered %d\n", i+1);
+//			break;
+//		} else {
+//			printf("Triggered 3\n");
+//			if (WL->queue == NULL){
+//				printf("Triggered 4\n");
+//				WL->queue = car;
+//			} else {
+//				printf("Triggered 5\n");
+//				struct Car *current = WL->queue;
+//        		while (current->next != NULL) {
+//        			printf("%s\n", current->plate);
+//            		current = current->next;
+//        		}
+//        		current->next = car;
+//        	}
+//		}
+//	}
 	
 	if (washingStations[0].processing == NULL){
 		washingStations[0].processing = car;
+		time1 = strdup(modifiedDate);
+		washingStations[0].processing->processedTime = time1;
 		printf("Triggered 1\n");
 	} else if (washingStations[1].processing == NULL){
 		washingStations[1].processing = car;
+		time1 = strdup(modifiedDate);
+		washingStations[0].processing->processedTime = time1;
 		printf("Triggered 2\n");
 	} else {
 		printf("Triggered 3\n");
@@ -162,19 +199,72 @@ void tambahAntrian() {
 	}
 }
 
-void insertFromWaitingList() {
+void insertFromWaitingList(char *modifiedDate) {
+	char *time1;
     if (WL->queue != NULL) {
     	for (int i = 0; i < MAX_STATION; i++) {
     		if (washingStations[i].processing == NULL) {
     			washingStations[i].processing = WL->queue;
+    			time1 = strdup(modifiedDate);
+				washingStations[0].processing->processedTime = time1;
     			WL->queue = WL->queue->next;
 			}
 		}
 	}
 }
 
+void isDoneAlert(int i, char *modifiedDate, struct tm *gmTime) {
+	char *finishTime;
+	int totalProcessingTime = dryingStations[i].processing->washingTime + dryingStations[i].processing->dryingTime;
+	gmTime->tm_min += totalProcessingTime;
+	time_t modifiedTime = mktime(gmTime);
+    modifiedDate = ctime(&modifiedTime);
+    finishTime = modifiedDate;
+    
+	printf("\nMobil dengan plat nomor %s bertipe %c telah selesai dicuci.\n", dryingStations[i].processing->plate, dryingStations[i].processing->type);
+	printf("Waktu kedatangan   :   %s", dryingStations[i].processing->arrivalTime);
+	printf("Waktu diproses     :   %s", dryingStations[i].processing->processedTime);
+	printf("Waktu selesai      :   %s\n\n", finishTime);
+	
+	gmTime->tm_min -= totalProcessingTime;
+	time_t modifiedTime1 = mktime(gmTime);
+    modifiedDate = ctime(&modifiedTime1);
+	
+}
+
+void insertToDryer(int j, int drying, char* modifiedDate, struct tm *gmTime) {
+	for (int i = 0; i < MAX_STATION; i++) {
+		if (dryingStations[i].processing == NULL) {
+			dryingStations[i].processing = washingStations[j].processing;
+			printf("Mobil memasuki drying station.\n");
+			if (dryingStations[i].processing->dryingTime <= drying) {
+				dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
+				isDoneAlert(i, modifiedDate, gmTime);
+				dryingStations[i].processing->dryingTime = 0;
+				dryingStations[i].processing = NULL;
+				break;
+			} else {
+				dryingStations[i].processing->washingTime -= drying;
+				dryingStations[i].processing->usedTime += drying;
+				break;
+			}
+		} else {
+			if (dryingStations[i].processing->dryingTime <= drying) {
+				dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
+				isDoneAlert(i, modifiedDate, gmTime);
+				drying -= dryingStations[i].processing->dryingTime;
+				dryingStations[i].processing->dryingTime = 0;
+				dryingStations[i].processing = NULL;
+			} else {
+				dryingStations[i].processing->washingTime -= drying;
+				dryingStations[i].processing->usedTime += drying;
+			}
+		}
+	}
+}
+
 void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
-	int inputHour, inputMinute, minute, remainingMinute, totalMinute;
+	int inputHour, inputMinute, minute, remainingMinute, totalMinute, exceedTime, totalProcessingTime, temp, temp1;
 	bool valid = true;
 	struct Car *current = NULL;
 	printf("Waktu sekarang: %s\n\n", modifiedDate);
@@ -185,6 +275,7 @@ void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
 	fflush(stdin);
 	scanf("%d", &inputMinute);
 	minute = (inputHour * 60) + inputMinute;
+	exceedTime = 0;
 	
     remainingMinute = minute;
 
@@ -193,22 +284,42 @@ void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
         for (int i = 0; i < MAX_STATION; i++) {
             if (washingStations[i].processing != NULL) {
             	printf("washingStation[%d].processing tidak NULL\n", i);
+            	totalProcessingTime = washingStations[i].processing->washingTime + washingStations[i].processing->dryingTime;
+            	if (minute > totalProcessingTime) {
+            		exceedTime = minute - totalProcessingTime;
+				}
+				printf("Total Processing Time: %d\n", totalProcessingTime);
+				printf("Minute: %d\n", minute);
+				printf("Exceed Time: %d\n", exceedTime);
+            	
+            	// Jika waktu cuci mobil lebih sedikit dari menit tersisa, mobil selesai dicuci basah
                 if (washingStations[i].processing->washingTime <= remainingMinute) {
                 	printf("washingStation[%d].processing->washingTime = %d, remainingMinute = %d\n", i, washingStations[i].processing->washingTime, remainingMinute);
-                    int temp = washingStations[i].processing->washingTime;
+                    temp = washingStations[i].processing->washingTime;
+                    temp1 = remainingMinute - washingStations[i].processing->washingTime;
+                    // Jika temp lebih besar dari usedMinute, usedMinute diisi temp
+                    // Jika temp tidak lebih besar dari usedMinute, usedMinute diisi usedMinute
                     usedMinute = temp > usedMinute ? temp : usedMinute;
+                    
+                    // Memasukkan ke stasiun pengering dengan parameter i = index washing station, temp1 = waktu tersedia untuk pengering, dan waktu saat ini.
+                    washingStations[i].processing->usedTime += washingStations[i].processing->washingTime;
+                    insertToDryer(i, temp1, modifiedDate, gmTime);
                     washingStations[i].processing->washingTime = 0;
                     washingStations[i].processing = NULL;
-                    insertFromWaitingList();
+                    
+                    // Jika waiting list tidak kosong, masukkan node pertama pada waiting list kedalam stasiun kosong
                     if (WL->queue == NULL) {
                     	printf("Waiting list kosong\n");
 					} else {
+						insertFromWaitingList(modifiedDate);
 						printf("Mengambil mobil dari waiting list\n");
 					}
                     
+                // Jika waktu cuci mobil lebih besar dari menit tersisa, waktu cuci tersebut di kurangi menit tersisa    
                 } else {
                 	printf("washingStation[%d].processing->washingTime lebih besar dari remainingMinute\n");
                     washingStations[i].processing->washingTime -= remainingMinute;
+                    washingStations[i].processing->usedTime += remainingMinute;
                     usedMinute = remainingMinute;
                     totalMinute += usedMinute;
                 }
@@ -220,16 +331,35 @@ void lompatWaktu(char *modifiedDate, struct tm *gmTime) {
         }
         remainingMinute -= usedMinute;
     } while (remainingMinute > 0 && valid == true);
+    
+    // Cek jika stasiun kosong, namun drying station terisi
+    if (!valid) {
+    	for (int i = 0; i < MAX_STATION; i++) {
+    		if (dryingStations[i].processing != NULL) {
+    			if (dryingStations[i].processing->dryingTime <= remainingMinute) {
+					dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
+					isDoneAlert(i, modifiedDate, gmTime);
+					dryingStations[i].processing->dryingTime = 0;
+					dryingStations[i].processing = NULL;
+				} else {
+					dryingStations[i].processing->washingTime -= remainingMinute;
+					dryingStations[i].processing->usedTime += remainingMinute;
+				}
+			}
+		}
+	}
+    
+    if (exceedTime > 0) {
+    	gmTime->tm_min -= exceedTime;
+    	time_t modifiedTime = mktime(gmTime);
+    	modifiedDate = ctime(&modifiedTime);
+	}
 
 	printf("Total minute: %d\n", totalMinute);
     gmTime->tm_min += minute;
     time_t modifiedTime = mktime(gmTime);
     modifiedDate = ctime(&modifiedTime);
-
-    
-    // Mengecek jika waiting list tidak kosong dan memasukkan node pertama pada waiting list kedalam stasiun kosong
-
-    
+	
     printf("Waktu terakhir: %s\n", modifiedDate);
 }
 
