@@ -51,4 +51,6 @@ void timeLeap(char *modifiedDate, struct tm *gmTime);
 // Prosedur untuk mencari mobil berdasarkan plat nomor
 void searchCar(char *plate);
 
+void displayCarList();
+
 #endif
