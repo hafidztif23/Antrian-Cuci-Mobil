@@ -1,36 +1,60 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<pthread.h>
+#include<string.h>
+#include<windows.h>
+#include<time.h>
 #include"header.h"
 
-// Kamus lokal
-	stations stasiun;
-	Car mobil;
-	char plate;
-	
-
 int main(){
-	int input;
+	char input;
+	char plate[10];
+	WL = malloc(sizeof(struct WaitingList));
+	WL->queue = NULL;
+	// Mengambil nilai waktu saat ini berupa detik
+	time_t now = time(NULL);
+	// Modifikasi value jam agar berada di jam 7 pagi
+	struct tm *gmTime = gmtime(&now);
+	gmTime->tm_hour = 7;
+	gmTime->tm_min = 0;
+	gmTime->tm_sec = 0;
+	// Mengubah kembali value gmTime ke detik
+	time_t modifiedTime = mktime(gmTime);
+	// Konversi detik menjadi sebuah date utuh
+	char *modifiedDate = ctime(&modifiedTime);
+	printf("%s\n", modifiedDate);
 	
 	// Create list
+	createStation();
 	
-	switch(input){
-		case 1:
+	do{
+		printf("1. Tambah Antrian.\n");
+		printf("2. Lompat Waktu\n");
+		printf("4. Cari Mobil\n");
+		fflush(stdin);
+		input = getchar();
+		switch(input){
+		case '1':	
 			// Tambah Antrian
-			
+			addQueue(modifiedDate);
 			break;
-		case 2:
+
+		case '2':
 			// Tampilkan Antrian saat ini
+			timeLeap(modifiedDate, gmTime);
 			break;
-		case 3:
-			// Fast forward time
-			break;
+//			
+//		case 3:
+//			
 		case 4:
-			// Search mobil (Estimasi waktu dikerjakan, plat nomor, tipe mobil) 
-			printf("Masukkan plat nomor: ");
-			fgets(plate, sizeof(plate), stdin);
-			Search();
-			break;
-	}
+			// Cari Mobil
+            printf("Masukkan plat nomor mobil yang ingin dicari: ");
+            scanf("%s", plate);
+            searchCar(plate);
+            break;
+
+//		case 5:
+//			// Cancel antrian
+		}
+	} while (input != 0);
 	return 0;
 }
