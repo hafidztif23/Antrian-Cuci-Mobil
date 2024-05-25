@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 #include "rizky.h"
 
 void createList()
@@ -20,33 +21,59 @@ void createList()
 
 void cancel(WaitingList *WL) 
 {
-	char plate[10];
-	printf("Masukan plat nomor kendaraan (A 123 B): ");
-	scanf("%s", plate);
+    if (WL->queue == NULL) 
+	{
+        printf("Antrian kosong.\n");
+        return;
+    }
+
+    char plate[20];
+    char confirmation;
+    printf("Masukan plat nomor kendaraan (A 123 B): ");
+    scanf(" %[^\n]", plate);
+
     Car *prev = NULL;
     Car *current = WL->queue;
 
-    // Traverse the waiting list to find the car
+    // Untuk mencari kendaraang dengan plat nomor yang sama
     while (current != NULL) 
 	{
+		// Untuk memeriksa apakah plat nomor saat ini sama dengan yang di input user
         if (strcmp(current->plate, plate) == 0) 
 		{
-            // If the car is found, remove it from the list
-            if (prev == NULL) 
-			{
-                WL->queue = current->next;
+            // Tampilkan informasi lengkap tentang mobil
+            printf("Informasi mobil:\n");
+            printf("Plat Nomor: %s\n", current->plate);
+            printf("Tipe: %c\n", current->type);
+            printf("Waktu Cuci: %d\n", current->washingTime);
+            printf("Waktu Kering: %d\n", current->dryingTime);
+            printf("Waktu Digunakan: %d\n", current->usedTime);
+            printf("Waktu Kedatangan: %s\n", current->arrivalTime);
+            printf("Waktu Diproses: %s\n", current->processedTime);
+
+            // Konfirmasi pembatalan
+            printf("Apakah yakin ingin membatalkan antrian? (y/t): ");
+            scanf(" %c", &confirmation);
+
+            if (confirmation == 'y' || confirmation == 'Y') {
+                // Jika kendaraan berada pada node pertama
+                if (prev == NULL) {
+                    WL->queue = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                free(current);
+                printf("Antrian untuk mobil dengan plat %s telah dibatalkan.\n", plate);
             } else {
-                prev->next = current->next;
+                printf("Pembatalan antrian dibatalkan.\n");
             }
-            free(current);
-            printf("Car with plate %s has been canceled from the waiting list.\n", plate);
             return;
         }
         prev = current;
         current = current->next;
     }
-
-    printf("Car with plate %s not found in the system.\n", plate);
+	// Jika tidak ada didalam list
+    printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
 }
 
 	/* BELUM BERES*/
