@@ -46,31 +46,6 @@ void cancel(WaitingList *WL)
         current = current->next;
     }
 
-    // If the car is not found in the waiting list, check the washing stations
-    int i;
-    for (i = 0; i < MAX_STATION; i++) 
-	{
-        if (washingStations[i].processing != NULL && strcmp(washingStations[i].processing->plate, plate) == 0) 
-		{
-            free(washingStations[i].processing);
-            washingStations[i].processing = NULL;
-            printf("Car with plate %s has been canceled from washing station %d.\n", plate, i);
-            return;
-        }
-    }
-
-    // If the car is not found in the waiting list or washing stations, check the drying stations
-    for (i = 0; i < MAX_STATION; i++) 
-	{
-        if (dryingStations[i].processing != NULL && strcmp(dryingStations[i].processing->plate, plate) == 0) 
-		{
-            free(dryingStations[i].processing);
-            dryingStations[i].processing = NULL;
-            printf("Car with plate %s has been canceled from drying station %d.\n", plate, i);
-            return;
-        }
-    }
-
     printf("Car with plate %s not found in the system.\n", plate);
 }
 
