@@ -33,6 +33,6 @@ Station dryingStations[MAX_STATION];
 
 void createList();
 void cancel(WaitingList *WL);
-void Estimate(int washingTime, int dryingTime);
+void Estimate(WaitingList *WL);
 
 #endif
