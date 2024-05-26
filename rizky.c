@@ -19,8 +19,10 @@ void createList()
     }
 }
 
+// Untuk cancel antrian
 void cancel(WaitingList *WL) 
 {
+	// Jika list kosong
     if (WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
@@ -76,11 +78,44 @@ void cancel(WaitingList *WL)
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
 }
 
-	/* BELUM BERES*/
-//void Estimate(int washingTime, int dryingTime) {
-//    // Menghitung total waktu pengerjaan
-//    int totalProcessingTime = washingTime + dryingTime;
-//    
-//    // Menampilkan estimasi waktu pengerjaan
-//    printf("Estimasi waktu pengerjaan: %d menit\n", totalProcessingTime);
-//}
+// Untuk estimate
+void Estimate(WaitingList *WL) 
+{
+	// Jika list koksong
+    if (WL == NULL || WL->queue == NULL) 
+	{
+        printf("Antrian kosong.\n");
+        return;
+    }
+    
+    char plate[20];
+    printf("Masukan plat nomor kendaraan (A 123 B): ");
+    scanf(" %[^\n]", plate);
+
+    Car *current = WL->queue;
+    // Untuk mencari kendaraang dengan plat nomor yang sama
+    while (current != NULL) 
+	{
+		// Untuk memeriksa apakah plat nomor saat ini sama dengan yang di input user
+        if (strcmp(current->plate, plate) == 0) 
+		{
+            // Tampilkan informasi lengkap tentang mobil
+            printf("Informasi mobil:\n");
+            printf("Plat Nomor: %s\n", current->plate);
+            printf("Tipe: %c\n", current->type);
+            printf("Waktu Cuci: %d menit\n", current->washingTime);
+            printf("Waktu Kering: %d menit\n", current->dryingTime);
+            printf("Waktu Digunakan: %d menit\n", current->usedTime);
+            printf("Waktu Kedatangan: %s\n", current->arrivalTime);
+            printf("Waktu Diproses: %s\n", current->processedTime);
+
+            // Menghitung total waktu pengerjaan
+            int totalProcessingTime = current->washingTime + current->dryingTime;
+            printf("Estimasi waktu pengerjaan: %d menit\n", totalProcessingTime);
+            return;
+        }
+        current = current->next;
+    }
+
+    printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
+}
