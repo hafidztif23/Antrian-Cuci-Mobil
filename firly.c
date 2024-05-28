@@ -375,100 +375,79 @@ void insertToDryer(int j, int drying, char* modifiedDate, struct tm *gmTime) {
 }
 
 void timeLeap(char *modifiedDate, struct tm *gmTime) {
-	int inputHour, inputMinute, minute, remainingMinute, totalMinute, exceedTime, totalProcessingTime, temp, temp1;
-	bool valid = true;
-	struct Car *current = NULL;
-	printf("Waktu sekarang: %s\n\n", modifiedDate);
-	printf("Masukkan berapa jam untuk di lompati: ");
-	fflush(stdin);
-	scanf("%d", &inputHour);
-	printf("Masukkan berapa menit untuk di lompati: ");
-	fflush(stdin);
-	scanf("%d", &inputMinute);
-	minute = (inputHour * 60) + inputMinute;
-	exceedTime = 0;
-	
-    remainingMinute = minute;
+    int inputHour, inputMinute, minute, remainingMinute, totalMinute, totalProcessingTime, temp, temp1;
+    bool valid = true;
+    struct Car *current = NULL;
 
-    do {
+    printf("Waktu sekarang: %s\n\n", modifiedDate);
+    printf("Masukkan berapa jam untuk di lompati: ");
+    fflush(stdin);
+    scanf("%d", &inputHour);
+    printf("Masukkan berapa menit untuk di lompati: ");
+    fflush(stdin);
+    scanf("%d", &inputMinute);
+    minute = (inputHour * 60) + inputMinute;
+    remainingMinute = minute;
+    totalMinute = 0;
+
+    while (remainingMinute > 0 && valid) {
         int usedMinute = 0; // Menyimpan menit yang digunakan dalam iterasi ini
+        valid = false; // Reset valid flag
+
+        // Process washing stations first
         for (int i = 0; i < MAX_STATION; i++) {
             if (washingStations[i].processing != NULL) {
-            	printf("washingStation[%d].processing tidak NULL\n", i);
-            	totalProcessingTime = washingStations[i].processing->washingTime + washingStations[i].processing->dryingTime;
-            	if (minute > totalProcessingTime) {
-            		exceedTime = minute - totalProcessingTime;
-				}
-				printf("Total Processing Time: %d\n", totalProcessingTime);
-				printf("Minute: %d\n", minute);
-				printf("Exceed Time: %d\n", exceedTime);
-            	
-            	// Jika waktu cuci mobil lebih sedikit dari menit tersisa, mobil selesai dicuci basah
+                valid = true;
+                totalProcessingTime = washingStations[i].processing->washingTime + washingStations[i].processing->dryingTime;
                 if (washingStations[i].processing->washingTime <= remainingMinute) {
-                	printf("washingStation[%d].processing->washingTime = %d, remainingMinute = %d\n", i, washingStations[i].processing->washingTime, remainingMinute);
                     temp = washingStations[i].processing->washingTime;
-                    temp1 = remainingMinute - washingStations[i].processing->washingTime;
-                    // Jika temp lebih besar dari usedMinute, usedMinute diisi temp
-                    // Jika temp tidak lebih besar dari usedMinute, usedMinute diisi usedMinute
-                    usedMinute = temp > usedMinute ? temp : usedMinute;
-                    
-                    // Memasukkan ke stasiun pengering dengan parameter i = index washing station, temp1 = waktu tersedia untuk pengering, dan waktu saat ini.
                     washingStations[i].processing->usedTime += washingStations[i].processing->washingTime;
-                    insertToDryer(i, temp1, modifiedDate, gmTime);
+                    insertToDryer(i, remainingMinute - washingStations[i].processing->washingTime, modifiedDate, gmTime);
                     washingStations[i].processing->washingTime = 0;
                     washingStations[i].processing = NULL;
-                    
-                    // Jika waiting list tidak kosong, masukkan node pertama pada waiting list kedalam stasiun kosong
-                    if (WL->queue == NULL) {
-                    	printf("Waiting list kosong\n");
-					} else {
-						insertFromWaitingList(modifiedDate, totalProcessingTime, gmTime);
-						printf("Mengambil mobil dari waiting list\n");
-					}
-                    
-                // Jika waktu cuci mobil lebih besar dari menit tersisa, waktu cuci tersebut di kurangi menit tersisa    
+                    if (WL->queue != NULL) {
+                        insertFromWaitingList(modifiedDate, totalProcessingTime, gmTime);
+                    }
                 } else {
-                	printf("washingStation[%d].processing->washingTime lebih besar dari remainingMinute\n");
                     washingStations[i].processing->washingTime -= remainingMinute;
                     washingStations[i].processing->usedTime += remainingMinute;
-                    usedMinute = remainingMinute;
-                    totalMinute += usedMinute;
+                    temp = remainingMinute;
                 }
-            } else {
-            	printf("Semua stasiun kosong\n");
-            	valid = false;
-			}
+                usedMinute = temp > usedMinute ? temp : usedMinute;
+            }
         }
-        remainingMinute -= usedMinute;
-    } while (remainingMinute > 0 && valid == true);
-    
-    // Cek jika stasiun cuci basah terisi dan stasiun cuci kering juga terisi
-    if (washingStations[0].processing != NULL || washingStations[1].processing != NULL) {
-    	for (int i = 0; i < MAX_STATION; i++) {
-    		if (dryingStations[i].processing != NULL) {
-    			if (dryingStations[i].processing->dryingTime <= minute) {
-					dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
-					isDoneAlert(i, modifiedDate, gmTime);
-					dryingStations[i].processing->dryingTime = 0;
-					dryingStations[i].processing = NULL;
-				} else {
-					dryingStations[i].processing->dryingTime -= minute;
-					dryingStations[i].processing->usedTime += minute;
-				}
-			}
-		}
-	}
-    
-    if (exceedTime > 0) {
-    	gmTime->tm_min -= exceedTime;
-    	time_t modifiedTime = mktime(gmTime);
-    	modifiedDate = ctime(&modifiedTime);
-	}
 
-	printf("Total minute: %d\n", totalMinute);
+        remainingMinute -= usedMinute;
+        totalMinute += usedMinute;
+    }
+
+    remainingMinute = minute - totalMinute; // Calculate remaining minutes for drying stations
+
+    // Process drying stations with remaining minutes
+    for (int i = 0; i < MAX_STATION; i++) {
+        if (dryingStations[i].processing != NULL) {
+            if (dryingStations[i].processing->dryingTime <= remainingMinute) {
+                dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
+                isDoneAlert(i, modifiedDate, gmTime);
+                dryingStations[i].processing->dryingTime = 0;
+                dryingStations[i].processing = NULL;
+            } else {
+                dryingStations[i].processing->dryingTime -= remainingMinute;
+                dryingStations[i].processing->usedTime += remainingMinute;
+            }
+        }
+    }
+
+    if (remainingMinute > 0) {
+        gmTime->tm_min -= remainingMinute;
+        time_t modifiedTime = mktime(gmTime);
+        modifiedDate = ctime(&modifiedTime);
+    }
+
+    printf("Total minute: %d\n", totalMinute);
     gmTime->tm_min += minute;
     time_t modifiedTime = mktime(gmTime);
     modifiedDate = ctime(&modifiedTime);
-	
+    
     printf("Waktu terakhir: %s\n", modifiedDate);
 }
