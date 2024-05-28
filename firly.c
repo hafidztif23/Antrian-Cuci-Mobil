@@ -7,7 +7,9 @@
 #include<time.h>
 #include"header.h"
 
-struct WaitingList *WL = NULL;
+WaitingList *WL = NULL;
+Station washingStations[MAX_STATION];
+Station dryingStations[MAX_STATION];
 
 void createStation() {
 	for (int i = 0; i < MAX_STATION; i++){
@@ -39,6 +41,89 @@ void showCarType() {
 	printf("  Dan Sejenisnya...\n");
 }
 
+void status(char *modifiedDate, struct WaitingList *WL, Station washingStations[MAX_STATION], Station dryingStations[MAX_STATION]){
+	char car1[50];
+	char car2[50];
+	if (washingStations[0].processing == NULL && washingStations[1].processing == NULL){
+		printf("======================================================\n");
+		printf("||                 STASIUN BASAH                    ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("||        Kosong         ||         Kosong          ||\n");
+		printf("======================================================\n\n");
+	} else if (washingStations[0].processing != NULL && washingStations[1].processing == NULL){
+		printf("======================================================\n");
+		printf("||                 STASIUN BASAH                    ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("|| Plat Nomor: %s  ||         Kosong          ||\n", washingStations[0].processing->plate);
+		printf("|| Tipe Mobil: %c         ||=========================||\n", washingStations[0].processing->type);
+		printf("|| Sisa waktu: %d menit  ||                           \n", washingStations[0].processing->washingTime);
+		printf("===========================\n\n");
+	} else if (washingStations[0].processing == NULL && washingStations[1].processing != NULL){
+		printf("======================================================\n");
+		printf("||                 STASIUN BASAH                    ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("||        Kosong         || Plat Nomor: %s    ||\n", washingStations[1].processing->plate);
+		printf("=========================|| Tipe Mobil: %c           ||\n", washingStations[1].processing->type);
+		printf("                         || Sisa waktu: %d menit    ||\n", washingStations[1].processing->washingTime);
+		printf("                         =============================\n\n");
+	} else {
+		printf("======================================================\n");
+		printf("||                 STASIUN BASAH                    ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("|| Plat Nomor: %s  || Plat Nomor: %s    ||\n", washingStations[0].processing->plate, washingStations[1].processing->plate);
+		printf("|| Tipe Mobil: %c         || Tipe Mobil: %c           ||\n", washingStations[0].processing->type, washingStations[1].processing->type);
+		printf("|| Sisa waktu: %d menit  || Sisa waktu: %d menit    ||\n", washingStations[0].processing->washingTime, washingStations[1].processing->washingTime);
+		printf("======================================================\n\n");
+	}
+	
+	if (dryingStations[0].processing == NULL && dryingStations[1].processing == NULL){
+		printf("======================================================\n");
+		printf("||               STASIUN PENGERING                  ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("||        Kosong         ||         Kosong          ||\n");
+		printf("======================================================\n\n");
+	} else if (dryingStations[0].processing != NULL && dryingStations[1].processing == NULL){
+		printf("======================================================\n");
+		printf("||               STASIUN PENGERING                  ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("|| Plat Nomor: %s  ||         Kosong          ||\n", dryingStations[0].processing->plate);
+		printf("|| Tipe Mobil: %c         ||=========================||\n", dryingStations[0].processing->type);
+		printf("|| Sisa waktu: %d menit  ||                           \n", dryingStations[0].processing->dryingTime);
+		printf("===========================\n\n");
+	} else if (dryingStations[0].processing == NULL && dryingStations[1].processing != NULL){
+		printf("======================================================\n");
+		printf("||               STASIUN PENGERING                  ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("||        Kosong         || Plat Nomor: %s    ||\n", dryingStations[1].processing->plate);
+		printf("=========================|| Tipe Mobil: %c           ||\n", dryingStations[1].processing->type);
+		printf("                         || Sisa waktu: %d menit    ||\n", dryingStations[1].processing->dryingTime);
+		printf("                         =============================\n\n");
+	} else {
+		printf("======================================================\n");
+		printf("||               STASIUN PENGERING                  ||\n");
+		printf("======================================================\n");
+		printf("||       Stasiun 1       ||        Stasiun 2        ||\n");
+		printf("||=======================||=========================||\n");
+		printf("|| Plat Nomor: %s  || Plat Nomor: %s    ||\n", dryingStations[0].processing->plate, dryingStations[1].processing->plate);
+		printf("|| Tipe Mobil: %c         || Tipe Mobil: %c           ||\n", dryingStations[0].processing->type, dryingStations[1].processing->type);
+		printf("|| Sisa waktu: %d menit  || Sisa waktu: %d menit    ||\n", dryingStations[0].processing->dryingTime, dryingStations[1].processing->dryingTime);
+		printf("======================================================\n\n");
+	}
+}
 void addQueue(char *modifiedDate) {
 	
 	int i, j, number, lower, upper = 0;
@@ -137,7 +222,7 @@ void addQueue(char *modifiedDate) {
 	}
 	strcpy(car->plate, plate);
 	car->next = NULL;
-	
+
 	
 //	Lakukan proses konfirmasi pembayaran disini sebelum menambahkan ke stasiun atau waiting list
 //	konfirmasiPembayaran() {
@@ -147,66 +232,44 @@ void addQueue(char *modifiedDate) {
 
 
 
-// To fix
-
-//	for (int i = 0; i < MAX_STATION; i++) {
-//		if (washingStations[i].processing == NULL){
-//			washingStations[i].processing = car;
-//			washingStations[i].processing->processedTime = modifiedDate;
-//			printf("Triggered %d\n", i+1);
-//			break;
-//		} else {
-//			printf("Triggered 3\n");
-//			if (WL->queue == NULL){
-//				printf("Triggered 4\n");
-//				WL->queue = car;
-//			} else {
-//				printf("Triggered 5\n");
-//				struct Car *current = WL->queue;
-//        		while (current->next != NULL) {
-//        			printf("%s\n", current->plate);
-//            		current = current->next;
-//        		}
-//        		current->next = car;
-//        	}
-//		}
-//	}
+	int l;
+	for (l = 0; l < MAX_STATION; l++) {
+    	if (washingStations[l].processing == NULL) {
+        	washingStations[l].processing = car;
+        	time1 = strdup(modifiedDate);
+			washingStations[l].processing->processedTime = time1;
+        	printf("Mobil diproses di stasiun pencucian %d\n", l + 1);
+        	break;
+    	}
+	}
 	
-	if (washingStations[0].processing == NULL){
-		washingStations[0].processing = car;
-		time1 = strdup(modifiedDate);
-		washingStations[0].processing->processedTime = time1;
-		printf("Triggered 1\n");
-	} else if (washingStations[1].processing == NULL){
-		washingStations[1].processing = car;
-		time1 = strdup(modifiedDate);
-		washingStations[0].processing->processedTime = time1;
-		printf("Triggered 2\n");
-	} else {
-		printf("Triggered 3\n");
-		if (WL->queue == NULL){
-			printf("Triggered 4\n");
-			WL->queue = car;
-		} else {
-			printf("Triggered 5\n");
-			struct Car *current = WL->queue;
+	if (l == MAX_STATION) {
+    	if (WL->queue == NULL) {
+        	WL->queue = car;
+    	} else {
+        	struct Car *current = WL->queue;
         	while (current->next != NULL) {
-        		printf("%s\n", current->plate);
             	current = current->next;
         	}
         	current->next = car;
-		}
+    	}
 	}
+//	status(modifiedDate, WL, washingStations, dryingStations);
 }
 
-void insertFromWaitingList(char *modifiedDate) {
+void insertFromWaitingList(char *modifiedDate, int totalProcessingTime, struct tm *gmTime) {
+	struct tm *temp = gmTime;
 	char *time1;
+	temp->tm_min += totalProcessingTime;
+	time_t tempTime1 = mktime(temp);
+	time1 = ctime(&tempTime1);
+	
     if (WL->queue != NULL) {
     	for (int i = 0; i < MAX_STATION; i++) {
     		if (washingStations[i].processing == NULL) {
     			washingStations[i].processing = WL->queue;
     			time1 = strdup(modifiedDate);
-				washingStations[0].processing->processedTime = time1;
+				washingStations[i].processing->processedTime = time1;
     			WL->queue = WL->queue->next;
 			}
 		}
@@ -311,7 +374,7 @@ void timeLeap(char *modifiedDate, struct tm *gmTime) {
                     if (WL->queue == NULL) {
                     	printf("Waiting list kosong\n");
 					} else {
-						insertFromWaitingList(modifiedDate);
+						insertFromWaitingList(modifiedDate, totalProcessingTime, gmTime);
 						printf("Mengambil mobil dari waiting list\n");
 					}
                     
@@ -342,7 +405,7 @@ void timeLeap(char *modifiedDate, struct tm *gmTime) {
 					dryingStations[i].processing->dryingTime = 0;
 					dryingStations[i].processing = NULL;
 				} else {
-					dryingStations[i].processing->washingTime -= remainingMinute;
+					dryingStations[i].processing->dryingTime -= remainingMinute;
 					dryingStations[i].processing->usedTime += remainingMinute;
 				}
 			}
@@ -362,22 +425,3 @@ void timeLeap(char *modifiedDate, struct tm *gmTime) {
 	
     printf("Waktu terakhir: %s\n", modifiedDate);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

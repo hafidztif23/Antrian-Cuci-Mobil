@@ -1,3 +1,4 @@
+
 #ifndef header_h
 #define header_h
 #define MAX_STATION 2
@@ -22,8 +23,8 @@ typedef struct WaitingList {
 	Car *queue;
 }WaitingList;
 
-Station washingStations[MAX_STATION];
-Station dryingStations[MAX_STATION];
+extern Station washingStations[MAX_STATION];
+extern Station dryingStations[MAX_STATION];
 
 extern struct WaitingList *WL;
 
@@ -37,7 +38,7 @@ void showCarType();
 void addQueue(char *modifiedDate);
 
 // Prosedur untuk memasukkan mobil list pertama dalam waiting list kedalam stasiun kosong
-void insertFromWaitingList(char *modifiedDate);
+void insertFromWaitingList(char *modifiedDate, int totalProcessingTime, struct tm *gmTime);
 
 // Prosedur untuk menampilkan detail mobil yang telah selesai dicuci
 void isDoneAlert(int i, char *modifiedDate, struct tm *gmTime);
@@ -47,5 +48,12 @@ void insertToDryer(int j, int drying, char* modifiedDate, struct tm *gmTime);
 
 // Prosedur untuk lompat waktu
 void timeLeap(char *modifiedDate, struct tm *gmTime);
+
+void status(char *modifiedDate, struct WaitingList *WL, Station washingStations[MAX_STATION], Station dryingStations[MAX_STATION]);
+
+// Prosedur untuk mencari mobil berdasarkan plat nomor
+void searchCar(char *plate);
+
+void displayCarList();
 
 #endif
