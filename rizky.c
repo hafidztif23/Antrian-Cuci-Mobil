@@ -81,7 +81,7 @@ void cancel(WaitingList *WL)
 // Untuk estimate
 void Estimate(WaitingList *WL) 
 {
-	// Jika list koksong
+    // Jika list kosong
     if (WL == NULL || WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
@@ -93,10 +93,12 @@ void Estimate(WaitingList *WL)
     scanf(" %[^\n]", plate);
 
     Car *current = WL->queue;
-    // Untuk mencari kendaraang dengan plat nomor yang sama
+    int position = 0; // Posisi mobil dalam antrian
+    int totalWaitingTime = 0; // Total waktu tunggu hingga mobil tersebut diproses
+
+    // Untuk mencari kendaraan dengan plat nomor yang sama
     while (current != NULL) 
 	{
-		// Untuk memeriksa apakah plat nomor saat ini sama dengan yang di input user
         if (strcmp(current->plate, plate) == 0) 
 		{
             // Tampilkan informasi lengkap tentang mobil
@@ -112,10 +114,17 @@ void Estimate(WaitingList *WL)
             // Menghitung total waktu pengerjaan
             int totalProcessingTime = current->washingTime + current->dryingTime;
             printf("Estimasi waktu pengerjaan: %d menit\n", totalProcessingTime);
+
+            // Menghitung estimasi waktu hingga mobil tersebut diproses
+            printf("Estimasi waktu hingga mobil diproses: %d menit\n", totalWaitingTime);
             return;
         }
+        // Tambahkan waktu pengerjaan dari mobil sebelumnya dalam antrian
+        totalWaitingTime += current->washingTime + current->dryingTime;
         current = current->next;
+        position++;
     }
 
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
 }
+
