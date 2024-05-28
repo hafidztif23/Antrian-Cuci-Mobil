@@ -85,16 +85,16 @@ int main(){
 		fflush(stdin);
 		system("cls");
 		status(modifiedDate, WL, washingStations, dryingStations);
-		printf("==================================================\n");
-		printf("|          Program Antrian Dago Car Wash         |\n");
-		printf("==================================================\n");
-		printf("| [1] Tambah Mobil                               |\n");
-		printf("| [2] Lompati Waktu                              |\n");
-		printf("| [3] Tampilkan Daftar Mobil                     |\n");
-		printf("| [4] Cari Mobil                                 |\n");
-		printf("| [5] Batalkan Antrian                           |\n");
-		printf("| [6] Keluar                                     |\n");
-		printf("==================================================\n");
+		printf("\n======================================================\n");
+		printf("||          Program Antrian Dago Car Wash           ||\n");
+		printf("======================================================\n");
+		printf("|| [1] Tambah Mobil                                 ||\n");
+		printf("|| [2] Lompati Waktu                                ||\n");
+		printf("|| [3] Tampilkan Daftar Mobil                       ||\n");
+		printf("|| [4] Cari Mobil                                   ||\n");
+		printf("|| [5] Batalkan Antrian                             ||\n");
+		printf("|| [6] Keluar                                       ||\n");
+		printf("======================================================\n");
 		printf("Pilih Opsi: ");
 		input = getchar();
 		switch(input){

@@ -22,23 +22,41 @@ void createStation() {
 }
 
 void showCarType() {
-	printf("Jenis Mobil A (Waktu Pencucian kurang lebih 50 Menit)\n");
-	printf("- KIA Picanto\n");
-	printf("- Daihatsu Ceria\n");
-	printf("- Suzuki Karimun\n");
-	printf("- Toyota Yaris\n");
-	printf("  Dan Sejenisnya...\n");
+	printf("======================================================\n");
+	printf("||                  JENIS MOBIL A                   ||\n");
+	printf("||      (Waktu pencucian kurang lebih 50 menit)     ||\n");
+	printf("======================================================\n");
+	printf("|| - KIA Picanto                                    ||\n");
+	printf("|| - Daihatsu Ceria                                 ||\n");
+	printf("|| - Suzuki Karimun                                 ||\n");
+	printf("|| - Toyota Yaris                                   ||\n");
+	printf("||                                                  ||\n");
+	printf("||   Dan Sejenisnya...                              ||\n");
+	printf("||                                                  ||\n");
+	printf("======================================================\n\n");
 	
-	printf("\nJenis Mobil B (Waktu Pencucian kurang lebih 60 Menit)\n");
-	printf("- Toyota Avanza\n");
-	printf("- Honda Freed\n");
-	printf("- Suzuki Ertiga\n");
-	printf("  Dan Sejenisnya...\n");
+	printf("======================================================\n");
+	printf("||                  JENIS MOBIL B                   ||\n");
+	printf("||      (Waktu pencucian kurang lebih 60 menit)     ||\n");
+	printf("======================================================\n");
+	printf("|| - Toyota Avanza                                  ||\n");
+	printf("|| - Honda Freed                                    ||\n");
+	printf("|| - Suzuki Ertiga                                  ||\n");
+	printf("||                                                  ||\n");
+	printf("||   Dan Sejenisnya...                              ||\n");
+	printf("||                                                  ||\n");
+	printf("======================================================\n\n");
 	
-	printf("\nJenis Mobil C (Waktu Pencucian kurang lebih 80 Menit)\n");
-	printf("- Metromini\n");
-	printf("- Truk\n");
-	printf("  Dan Sejenisnya...\n");
+	printf("======================================================\n");
+	printf("||                  JENIS MOBIL C                   ||\n");
+	printf("||      (Waktu pencucian kurang lebih 80 menit)     ||\n");
+	printf("======================================================\n");
+	printf("|| - Metromini                                      ||\n");
+	printf("|| - Truk                                           ||\n");
+	printf("||                                                  ||\n");
+	printf("||   Dan Sejenisnya...                              ||\n");
+	printf("||                                                  ||\n");
+	printf("======================================================\n\n");
 }
 
 void status(char *modifiedDate, struct WaitingList *WL, Station washingStations[MAX_STATION], Station dryingStations[MAX_STATION]){
@@ -123,6 +141,37 @@ void status(char *modifiedDate, struct WaitingList *WL, Station washingStations[
 		printf("|| Sisa waktu: %d menit  || Sisa waktu: %d menit    ||\n", dryingStations[0].processing->dryingTime, dryingStations[1].processing->dryingTime);
 		printf("======================================================\n\n");
 	}
+	
+	if (WL->queue == NULL){
+		printf("============================\n");
+		printf("||      WAITING LIST      ||\n");
+		printf("============================\n");
+		printf("||  1  ||     Kosong      ||\n");
+		printf("============================\n\n");
+	} else {
+		printf("======================================================\n");
+		printf("||                   WAITING LIST                   ||\n");
+		printf("======================================================\n");
+		
+		int i = 1;
+		char str[50];
+		struct Car *current = WL->queue;
+		while (current != NULL){
+			strcpy(str, current->arrivalTime);
+			size_t len = strlen(str);
+    		if (len > 0 && str[len - 1] == '\n'){
+        			str[len - 1] = '\0';
+    		}
+			printf("||      || Plat Nomor   : %s                  ||\n", current->plate);
+			printf("||   %d  || Tipe Mobil   : %c                         ||\n", i, current->type);
+			printf("||      || Waktu Datang : %s  ||\n", str);
+			printf("======================================================\n");
+			i++;
+			current = current->next;
+		}
+//		printf("||  1  ||     Kosong      ||\n");
+//		printf("============================\n");
+	}
 }
 void addQueue(char *modifiedDate) {
 	
@@ -197,9 +246,9 @@ void addQueue(char *modifiedDate) {
 	valid = false;
 	while (!valid){
 		inputUp = toupper(input);
-		printf("Tipe mobil yang dipilih: %c\n\n", inputUp);
+		printf(" Tipe mobil yang dipilih: %c\n\n", inputUp);
 		fflush(stdin);
-		printf("Masukkan Plat Nomor (Maksimal 7 Karakter): ");
+		printf(" Masukkan Plat Nomor (Maksimal 7 Karakter): ");
 		fgets(plate, sizeof(plate), stdin);
 
     	// Menghapus karakter newline dari input
@@ -254,7 +303,6 @@ void addQueue(char *modifiedDate) {
         	current->next = car;
     	}
 	}
-//	status(modifiedDate, WL, washingStations, dryingStations);
 }
 
 void insertFromWaitingList(char *modifiedDate, int totalProcessingTime, struct tm *gmTime) {
@@ -389,24 +437,23 @@ void timeLeap(char *modifiedDate, struct tm *gmTime) {
             } else {
             	printf("Semua stasiun kosong\n");
             	valid = false;
-            	break;
 			}
         }
         remainingMinute -= usedMinute;
     } while (remainingMinute > 0 && valid == true);
     
-    // Cek jika stasiun kosong, namun drying station terisi
-    if (!valid) {
+    // Cek jika stasiun cuci basah terisi dan stasiun cuci kering juga terisi
+    if (washingStations[0].processing != NULL || washingStations[1].processing != NULL) {
     	for (int i = 0; i < MAX_STATION; i++) {
     		if (dryingStations[i].processing != NULL) {
-    			if (dryingStations[i].processing->dryingTime <= remainingMinute) {
+    			if (dryingStations[i].processing->dryingTime <= minute) {
 					dryingStations[i].processing->usedTime += dryingStations[i].processing->dryingTime;
 					isDoneAlert(i, modifiedDate, gmTime);
 					dryingStations[i].processing->dryingTime = 0;
 					dryingStations[i].processing = NULL;
 				} else {
-					dryingStations[i].processing->dryingTime -= remainingMinute;
-					dryingStations[i].processing->usedTime += remainingMinute;
+					dryingStations[i].processing->dryingTime -= minute;
+					dryingStations[i].processing->usedTime += minute;
 				}
 			}
 		}
