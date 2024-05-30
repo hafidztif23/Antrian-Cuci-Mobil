@@ -90,7 +90,7 @@ int main(){
 		printf("======================================================\n");
 		printf("|| [1] Tambah Mobil                                 ||\n");
 		printf("|| [2] Lompati Waktu                                ||\n");
-		printf("|| [3] Tampilkan Daftar Mobil                       ||\n");
+		printf("|| [3] Tampilkan Informasi Lengkap Mobil            ||\n");
 		printf("|| [4] Cari Mobil                                   ||\n");
 		printf("|| [5] Batalkan Antrian                             ||\n");
 		printf("|| [6] Keluar                                       ||\n");
@@ -108,9 +108,8 @@ int main(){
 			timeLeap(modifiedDate, gmTime);
 			break;
 		case '3':
-			status(modifiedDate, WL, washingStations, dryingStations);
-			printf("Tekan sembarang tombol untuk melanjutkan...");
-			getchar();
+			displayCarList();
+			spaceToContinue();
 			break;
 		case '4':
 			fflush(stdin);
@@ -118,8 +117,7 @@ int main(){
 			fgets(plate, sizeof(plate), stdin);
 			plate[strcspn(plate, "\n")] = '\0'; // Menghapus karakter newline dari input
 			searchCar(plate);
-			printf("Tekan sembarang tombol untuk melanjutkan...");
-			getchar();
+			spaceToContinue();
 			break;
 
 //		case 5:
