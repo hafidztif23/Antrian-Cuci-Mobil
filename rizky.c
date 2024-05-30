@@ -1,31 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <conio.h>
-#include "rizky.h"
-
-void createList()
-{
-    // Inisialisasi waiting list
-    WaitingList *WL = (WaitingList*) malloc(sizeof(struct WaitingList));
-    WL->queue = NULL;
-
-    // Inisialisasi stasiun cuci dan kering
-    int i;
-    for (i = 0; i < MAX_STATION; i++) 
-	{
-        washingStations[i].processing = NULL;
-        dryingStations[i].processing = NULL;
-    }
-}
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<windows.h>
+#include<stdbool.h>
+#include<ctype.h>
+#include<time.h>
+#include "header.h"
 
 // Untuk cancel antrian
-void cancel(WaitingList *WL) 
+void cancel(WaitingList *WL, char* modifiedDate) 
 {
 	// Jika list kosong
     if (WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
+        getch();
         return;
     }
 
@@ -36,7 +25,7 @@ void cancel(WaitingList *WL)
 
     Car *prev = NULL;
     Car *current = WL->queue;
-
+	system("cls");
     // Untuk mencari kendaraang dengan plat nomor yang sama
     while (current != NULL) 
 	{
@@ -44,30 +33,33 @@ void cancel(WaitingList *WL)
         if (strcmp(current->plate, plate) == 0) 
 		{
             // Tampilkan informasi lengkap tentang mobil
-            printf("Informasi mobil:\n");
+            printf("Mobil terdapat dalam antrian\nInformasi mobil:\n");
             printf("Plat Nomor: %s\n", current->plate);
-            printf("Tipe: %c\n", current->type);
-            printf("Waktu Cuci: %d\n", current->washingTime);
-            printf("Waktu Kering: %d\n", current->dryingTime);
-            printf("Waktu Digunakan: %d\n", current->usedTime);
-            printf("Waktu Kedatangan: %s\n", current->arrivalTime);
-            printf("Waktu Diproses: %s\n", current->processedTime);
+            printf("Jenis Mobil: %c\n", current->type);
+            printf("Waktu Pengerjaan: %d menit\n", current->washingTime + current->dryingTime);
+            printf("Waktu Kedatangan: %s", current->arrivalTime);
+            printf("Waktu Mulai Pencucian: Belum Diproses\n");
+            printf("Waktu Selesai Pencucian: Belum Diproses\n\n");
 
             // Konfirmasi pembatalan
             printf("Apakah yakin ingin membatalkan antrian? (y/t): ");
             scanf(" %c", &confirmation);
 
-            if (confirmation == 'y' || confirmation == 'Y') {
+            if (confirmation == 'y' || confirmation == 'Y') 
+			{
                 // Jika kendaraan berada pada node pertama
-                if (prev == NULL) {
+                if (prev == NULL) 
+				{
                     WL->queue = current->next;
                 } else {
                     prev->next = current->next;
                 }
                 free(current);
                 printf("Antrian untuk mobil dengan plat %s telah dibatalkan.\n", plate);
+                getch();
             } else {
                 printf("Pembatalan antrian dibatalkan.\n");
+                getch();
             }
             return;
         }
@@ -76,6 +68,7 @@ void cancel(WaitingList *WL)
     }
 	// Jika tidak ada didalam list
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
+    getch();
 }
 
 // Untuk estimate
@@ -85,6 +78,7 @@ void Estimate(WaitingList *WL)
     if (WL == NULL || WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
+        getch();
         return;
     }
     
@@ -95,21 +89,20 @@ void Estimate(WaitingList *WL)
     Car *current = WL->queue;
     int position = 0; // Posisi mobil dalam antrian
     int totalWaitingTime = 0; // Total waktu tunggu hingga mobil tersebut diproses
-
+	system("cls");
     // Untuk mencari kendaraan dengan plat nomor yang sama
     while (current != NULL) 
 	{
         if (strcmp(current->plate, plate) == 0) 
 		{
             // Tampilkan informasi lengkap tentang mobil
-            printf("Informasi mobil:\n");
+            printf("Mobil terdapat dalam antrian\nInformasi mobil:\n");
             printf("Plat Nomor: %s\n", current->plate);
-            printf("Tipe: %c\n", current->type);
-            printf("Waktu Cuci: %d menit\n", current->washingTime);
-            printf("Waktu Kering: %d menit\n", current->dryingTime);
-            printf("Waktu Digunakan: %d menit\n", current->usedTime);
-            printf("Waktu Kedatangan: %s\n", current->arrivalTime);
-            printf("Waktu Diproses: %s\n", current->processedTime);
+            printf("Jenis Mobil: %c\n", current->type);
+            printf("Waktu Pengerjaan: %d menit\n", current->washingTime + current->dryingTime);
+            printf("Waktu Kedatangan: %s", current->arrivalTime);
+            printf("Waktu Mulai Pencucian: Belum Diproses\n");
+            printf("Waktu Selesai Pencucian: Belum Diproses\n\n");
 
             // Menghitung total waktu pengerjaan
             int totalProcessingTime = current->washingTime + current->dryingTime;
@@ -117,6 +110,7 @@ void Estimate(WaitingList *WL)
 
             // Menghitung estimasi waktu hingga mobil tersebut diproses
             printf("Estimasi waktu hingga mobil diproses: %d menit\n", totalWaitingTime);
+            getch();
             return;
         }
         // Tambahkan waktu pengerjaan dari mobil sebelumnya dalam antrian
@@ -126,5 +120,7 @@ void Estimate(WaitingList *WL)
     }
 
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
+    getch();
 }
+
 
