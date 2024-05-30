@@ -108,7 +108,7 @@ int main(){
 			timeLeap(modifiedDate, gmTime);
 			break;
 		case '3':
-			displayCarList();
+			displayCarList(modifiedDate, gmTime);
 			spaceToContinue();
 			break;
 		case '4':
@@ -116,7 +116,7 @@ int main(){
 			printf("Masukkan Plat Nomor: ");
 			fgets(plate, sizeof(plate), stdin);
 			plate[strcspn(plate, "\n")] = '\0'; // Menghapus karakter newline dari input
-			searchCar(plate);
+			searchCar(plate, modifiedDate, gmTime);
 			spaceToContinue();
 			break;
 

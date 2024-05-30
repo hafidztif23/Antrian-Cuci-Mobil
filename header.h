@@ -52,8 +52,9 @@ void timeLeap(char *modifiedDate, struct tm *gmTime);
 void status(char *modifiedDate, struct WaitingList *WL, Station washingStations[MAX_STATION], Station dryingStations[MAX_STATION]);
 
 // Prosedur untuk mencari mobil berdasarkan plat nomor
-void searchCar(char *plate);
+void searchCar(char *plate, char *modifiedDate, struct tm *gmTime);
 
-void displayCarList();
+void displayCarList(char *modifiedDate, struct tm *gmTime);
 
+void spaceToContinue();
 #endif

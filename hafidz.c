@@ -6,14 +6,11 @@
 #include<ctype.h>
 #include<time.h>
 #include"header.h"
-void searchCar(char *plate) {
+
+
+void searchCar(char *plate, char *modifiedDate, struct tm *gmTime) {
 	system("cls");
 	Car *current;
-	time_t now = time(NULL);
-	struct tm *gmTime = gmtime(&now);
-	gmTime->tm_hour = 7;
-	gmTime->tm_min = 0;
-	gmTime->tm_sec = 0;
 	int found = 0;
 
 	// Cari di washing stations
@@ -47,8 +44,8 @@ void searchCar(char *plate) {
 				printf("Waktu kedatangan : %s", dryingStations[i].processing->arrivalTime);
 				printf("Waktu mulai pencucian : %s", dryingStations[i].processing->processedTime);
 				// Kalkulasi waktu selesai pencucian berdasarkan waktu mulai dan waktu pengerjaan
-				time_t processedTime = mktime(gmTime) + (dryingStations[i].processing->washingTime + dryingStations[i].processing->dryingTime) * 60;
-				printf("Waktu selesai pencucian : %s\n", ctime(&processedTime));
+				time_t modifiedTime = mktime(gmTime) + (dryingStations[i].processing->washingTime + dryingStations[i].processing->dryingTime) * 60;
+				printf("Waktu selesai pencucian : %s\n", ctime(&modifiedTime));
 			}
 		}
 	}
@@ -79,14 +76,9 @@ void searchCar(char *plate) {
 	}
 }
 
-void displayCarList() {
+void displayCarList(char *modifiedDate, struct tm *gmTime) {
 	system("cls");
 	Car *current;
-	time_t now = time(NULL);
-	struct tm *gmTime = gmtime(&now);
-	gmTime->tm_hour = 7;
-	gmTime->tm_min = 0;
-	gmTime->tm_sec = 0;
 	int i;
 
 	// Tampilkan mobil di washing stations
@@ -116,8 +108,8 @@ void displayCarList() {
 			printf("Waktu kedatangan : %s", dryingStations[i].processing->arrivalTime);
 			printf("Waktu mulai pencucian : %s", dryingStations[i].processing->processedTime);
 			// Kalkulasi waktu selesai pencucian berdasarkan waktu mulai dan waktu pengerjaan
-			time_t processedTime = mktime(gmTime) + (dryingStations[i].processing->washingTime + dryingStations[i].processing->dryingTime) * 60;
-			printf("Waktu selesai pencucian : %s\n", ctime(&processedTime));
+			time_t modifiedTime = mktime(gmTime) + (dryingStations[i].processing->washingTime + dryingStations[i].processing->dryingTime) * 60;
+			printf("Waktu selesai pencucian : %s\n", ctime(&modifiedTime));
 		}
 	}
 
