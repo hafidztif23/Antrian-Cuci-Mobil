@@ -32,7 +32,9 @@ Station dryingStations[MAX_STATION];
 //extern struct WaitingList *WL;
 
 void createList();
-void cancel(WaitingList *WL);
+void cancel(WaitingList *WL, char *modifiedDate);
 void Estimate(WaitingList *WL);
+void payment(WaitingList *WL);
+void pay(int cost);
 
 #endif
