@@ -123,4 +123,88 @@ void Estimate(WaitingList *WL)
     getch();
 }
 
+// bayar-bayar
+void pay(int cost) 
+{
+    int amountPaid;
+    printf("Total biaya(Rp): %d\n", cost);
+    printf("Masukkan jumlah yang dibayar(Rp): ");
+    scanf("%d", &amountPaid);
+    
+    if (amountPaid < cost) 
+	{
+        printf("Jumlah yang dibayar tidak cukup. Pembayaran gagal.\n");
+        getch();
+        return;
+    }
 
+    int change = amountPaid - cost;
+    printf("Pembayaran berhasil.\n");
+    if (change > 0) 
+	{
+        printf("Kembalian: %d\n", change);
+    }
+    getch();
+}
+
+void payment(WaitingList *WL) 
+{
+    if (WL->queue == NULL) 
+    {
+        printf("Antrian kosong.\n");
+        getch();
+        return;
+    }
+
+    char plate[20];
+    printf("Masukkan plat nomor kendaraan (A 123 B): ");
+    scanf(" %[^\n]", plate);
+
+    Car *current = WL->queue;
+    system("cls");
+    while (current != NULL)
+    {
+        if (strcmp(current->plate, plate) == 0) 
+        {
+            // Tampilkan informasi lengkap tentang mobil
+            printf("Mobil terdapat dalam antrian\nInformasi mobil:\n");
+            printf("Plat Nomor: %s\n", current->plate);
+            printf("Jenis Mobil: %c\n", current->type);
+            printf("Waktu Kedatangan: %s", current->arrivalTime);
+            printf("Waktu Mulai Pencucian: Belum Diproses\n");
+            printf("Waktu Selesai Pencucian: Belum Diproses\n\n");
+
+            int cost = 0; // Inisialisasi biaya menjadi 0
+            switch(current->type) // Tentukan biaya berdasarkan jenis mobil
+            {
+                case 'A':
+                    cost = 50000; // Biaya untuk jenis mobil A
+                    break;
+                case 'B':
+                    cost = 60000; // Biaya untuk jenis mobil B
+                    break;
+                case 'C':
+                    cost = 80000; // Biaya untuk jenis mobil C
+                    break;
+                default:
+                    printf("Jenis mobil tidak valid.\n");
+                    getch();
+                    return;
+            }
+
+            printf("Biaya Cuci: %d\n", cost);
+            pay(cost);
+            
+            // Setelah pembayaran, hapus mobil dari antrian
+//            Car *temp = current;
+//            WL->queue = current->next;
+//            free(temp);
+
+            return;
+        }
+        current = current->next;
+    }
+
+    printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
+    getch();
+}
