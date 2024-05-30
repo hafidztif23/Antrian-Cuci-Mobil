@@ -14,7 +14,7 @@ void cancel(WaitingList *WL, char* modifiedDate)
     if (WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
-        getch();
+        Sleep(2000);
         return;
     }
 
@@ -56,10 +56,10 @@ void cancel(WaitingList *WL, char* modifiedDate)
                 }
                 free(current);
                 printf("Antrian untuk mobil dengan plat %s telah dibatalkan.\n", plate);
-                getch();
+                Sleep(2000);
             } else {
                 printf("Pembatalan antrian dibatalkan.\n");
-                getch();
+                Sleep(2000);
             }
             return;
         }
@@ -68,7 +68,7 @@ void cancel(WaitingList *WL, char* modifiedDate)
     }
 	// Jika tidak ada didalam list
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
-    getch();
+    Sleep(2000);
 }
 
 // Untuk estimate
@@ -78,7 +78,7 @@ void Estimate(WaitingList *WL)
     if (WL == NULL || WL->queue == NULL) 
 	{
         printf("Antrian kosong.\n");
-        getch();
+        Sleep(2000);
         return;
     }
     
@@ -110,7 +110,7 @@ void Estimate(WaitingList *WL)
 
             // Menghitung estimasi waktu hingga mobil tersebut diproses
             printf("Estimasi waktu hingga mobil diproses: %d menit\n", totalWaitingTime);
-            getch();
+            spaceToContinue();
             return;
         }
         // Tambahkan waktu pengerjaan dari mobil sebelumnya dalam antrian
@@ -120,7 +120,7 @@ void Estimate(WaitingList *WL)
     }
 
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
-    getch();
+    spaceToContinue();
 }
 
 // bayar-bayar
@@ -134,7 +134,7 @@ void pay(int cost)
     if (amountPaid < cost) 
 	{
         printf("Jumlah yang dibayar tidak cukup. Pembayaran gagal.\n");
-        getch();
+        spaceToContinue();
         return;
     }
 
@@ -144,7 +144,7 @@ void pay(int cost)
 	{
         printf("Kembalian: %d\n", change);
     }
-    getch();
+    spaceToContinue();
 }
 
 void payment(WaitingList *WL) 
@@ -152,7 +152,7 @@ void payment(WaitingList *WL)
     if (WL->queue == NULL) 
     {
         printf("Antrian kosong.\n");
-        getch();
+        Sleep(2000);
         return;
     }
 
@@ -188,7 +188,7 @@ void payment(WaitingList *WL)
                     break;
                 default:
                     printf("Jenis mobil tidak valid.\n");
-                    getch();
+                    Sleep(2000);
                     return;
             }
 
@@ -206,5 +206,5 @@ void payment(WaitingList *WL)
     }
 
     printf("Mobil dengan plat %s tidak ditemukan dalam antrian.\n", plate);
-    getch();
+    Sleep(2000);
 }

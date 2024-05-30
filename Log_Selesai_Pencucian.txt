@@ -1,0 +1,63 @@
+Thu May 30 08:25:00 2024
+Mobil dengan plat nomor A 2222 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 07:00:00 2024
+Waktu selesai      :   Thu May 30 08:25:00 2024
+
+
+Thu May 30 08:25:00 2024
+Mobil dengan plat nomor A 1111 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 07:00:00 2024
+Waktu selesai      :   Thu May 30 08:25:00 2024
+
+
+Thu May 30 07:48:00 2024
+Mobil dengan plat nomor A 1111 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 07:00:00 2024
+Waktu selesai      :   Thu May 30 07:48:00 2024
+
+
+Thu May 30 08:36:00 2024
+Mobil dengan plat nomor A 2222 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:48:00 2024
+Waktu diproses     :   Thu May 30 07:48:00 2024
+Waktu selesai      :   Thu May 30 08:36:00 2024
+
+
+Thu May 30 08:41:00 2024
+Mobil dengan plat nomor A 1111 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:48:00 2024
+Waktu diproses     :   Thu May 30 07:48:00 2024
+Waktu selesai      :   Thu May 30 08:41:00 2024
+
+
+Thu May 30 09:47:00 2024
+Mobil dengan plat nomor A 3333 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:48:00 2024
+Waktu diproses     :   Thu May 30 09:47:00 2024
+Waktu selesai      :   Thu May 30 09:47:00 2024
+
+
+Thu May 30 07:49:00 2024
+Mobil dengan plat nomor A 2222 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 07:00:00 2024
+Waktu selesai      :   Thu May 30 07:49:00 2024
+
+
+Thu May 30 07:50:00 2024
+Mobil dengan plat nomor A 1111 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 07:00:00 2024
+Waktu selesai      :   Thu May 30 07:50:00 2024
+
+
+Thu May 30 09:03:00 2024
+Mobil dengan plat nomor A 3333 A bertipe A telah selesai dicuci.
+Waktu kedatangan   :   Thu May 30 07:00:00 2024
+Waktu diproses     :   Thu May 30 09:03:00 2024
+Waktu selesai      :   Thu May 30 09:03:00 2024
+
+
