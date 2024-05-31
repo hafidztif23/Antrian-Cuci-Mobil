@@ -59,7 +59,7 @@ int main(){
 			selesaiPengerjaan(modifiedDate, gmTime);
 			break;
 		case '3':
-			displayCarList(modifiedDate, gmTime);
+			displayCarList(gmTime);
 			spaceToContinue();
 			break;
 		case '4':
@@ -67,7 +67,7 @@ int main(){
 			printf("Masukkan Plat Nomor: ");
 			fgets(plate, sizeof(plate), stdin);
 			plate[strcspn(plate, "\n")] = '\0'; // Menghapus karakter newline dari input
-			searchCar(plate, modifiedDate, gmTime);
+			searchCar(plate, gmTime);
 			spaceToContinue();
 			break;
 

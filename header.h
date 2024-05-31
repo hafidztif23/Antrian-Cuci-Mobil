@@ -59,10 +59,10 @@ void selesaiCuciKering(int index, char *modifiedDate, struct tm *gmTime);
 void selesaiCuciBasah(int index, char *modifiedDate, struct tm *gmTime);
 
 // Prosedur untuk mencari mobil berdasarkan plat nomor
-void searchCar(char *plate, char *modifiedDate, struct tm *gmTime);
+void searchCar(char *plate, struct tm *gmTime);
 
 // Menampilkan detail semua mobil
-void displayCarList(char *modifiedDate, struct tm *gmTime);
+void displayCarList(struct tm *gmTime);
 
 void spaceToContinue();
 
