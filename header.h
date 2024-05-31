@@ -21,6 +21,7 @@ typedef struct Station {
 }Station;
 typedef struct WaitingList {
 	Car *queue;
+	Car *currentWashing;
 }WaitingList;
 
 extern Station washingStations[MAX_STATION];
